@@ -1,8 +1,6 @@
 package com.sapient.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,14 +47,10 @@ public class EmployeeServiceImplIntegrationTest {
     public void setUp() {
         Employee john = new Employee("john");
         john.setId(11L);
-        john.setJob("Developer");
-        john.setSalary(120000.0);
+
         Employee bob = new Employee("bob");
-        bob.setJob("Developer");
-        bob.setSalary(120000.0);
         Employee alex = new Employee("alex");
-        alex.setJob("Developer");
-        alex.setSalary(120000.0);
+
         List<Employee> allEmployees = Arrays.asList(john, bob, alex);
 
         Mockito.when(employeeRepository.findByName(john.getName())).thenReturn(john);
@@ -65,10 +59,7 @@ public class EmployeeServiceImplIntegrationTest {
         Mockito.when(employeeRepository.findById(john.getId())).thenReturn(Optional.of(john));
         Mockito.when(employeeRepository.findAll()).thenReturn(allEmployees);
         Mockito.when(employeeRepository.findById(-99L)).thenReturn(Optional.empty());
-        Mockito.when(employeeRepository.findByJobAndSalary("Developer", 120000.0)).thenReturn(allEmployees);
-        Mockito.when(employeeRepository.findByJobAndSalaryGreaterThan("Developer", 100000.0)).thenReturn(allEmployees);
     }
-
 
     @Test
     public void whenValidName_thenEmployeeShouldBeFound() {
@@ -180,60 +171,6 @@ public class EmployeeServiceImplIntegrationTest {
        
     }
 
-    @Test
-    public void findByJobAndSalary() {
-    	List<Employee> fromDb;
-		try {
-			fromDb = employeeService.findByJobAndSalary("Developer",120000.0);
-			for(Employee emp:fromDb)
-			{
-				assertThat(emp.getJob()).isEqualTo("Developer");
-				assertThat(emp.getSalary()).isEqualTo(120000.0);
-			}
-			verifyFindByJobAndSalaryIsCalledOnce("Developer",120000.0);
-		} catch (EmployeeException e) {
-			e.printStackTrace();
-		}
-        
-    }
-    @Test
-    public void findByJobAndSalaryGreaterThan(){
-    	List<Employee> fromDb;
-		try {
-			fromDb = employeeService.findByJobAndSalaryGreaterThan("Developer",100000.0);
-			for(Employee emp:fromDb)
-			{
-				assertThat(emp.getJob()).isEqualTo("Developer");
-				assertThat(emp.getSalary()).isGreaterThan(100000.0);
-			}
-			verifyFindByJobAndSalaryGreaterThanIsCalledOnce("Developer",100000.0);
-		} catch (EmployeeException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    @Test
-    void EmployeeExceptionForInvalidJobAndSalaryGreaterThan() {
-    	 EmployeeException thrown = assertThrows(
-    	           EmployeeException.class,
-    	           () -> employeeService.findByJobAndSalaryGreaterThan("Deve",178000.0),
-    	           "Expected doThing() to throw, but it didn't"
-    	    );
-
-    	    assertTrue(thrown.getMessage().contains("No employees in the database with the specified conditions"));
-    }
-    
-    @Test
-    void EmployeeExceptionForInvalidJobAndSalary() {
-    	 EmployeeException thrown = assertThrows(
-    	           EmployeeException.class,
-    	           () -> employeeService.findByJobAndSalary("Deve",178000.0),
-    	           "Expected doThing() to throw, but it didn't"
-    	    );
-
-    	    assertTrue(thrown.getMessage().contains("No employees in the database with the specified job and salary"));
-    }
-
     private void verifyFindByNameIsCalledOnce(String name) {
         Mockito.verify(employeeRepository, VerificationModeFactory.times(1)).findByName(name);
         Mockito.reset(employeeRepository);
@@ -246,14 +183,6 @@ public class EmployeeServiceImplIntegrationTest {
 
     private void verifyFindAllEmployeesIsCalledOnce() {
         Mockito.verify(employeeRepository, VerificationModeFactory.times(1)).findAll();
-        Mockito.reset(employeeRepository);
-    }
-    private void verifyFindByJobAndSalaryIsCalledOnce(String job,Double salary) {
-        Mockito.verify(employeeRepository, VerificationModeFactory.times(1)).findByJobAndSalary(job, salary);
-        Mockito.reset(employeeRepository);
-    }
-    private void verifyFindByJobAndSalaryGreaterThanIsCalledOnce(String job,Double salary) {
-    	Mockito.verify(employeeRepository, VerificationModeFactory.times(1)).findByJobAndSalaryGreaterThan(job, salary);
         Mockito.reset(employeeRepository);
     }
 }

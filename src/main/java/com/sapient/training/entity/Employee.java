@@ -11,12 +11,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "employee_sapient3")
 public class Employee {
@@ -95,5 +94,6 @@ public class Employee {
 	public Employee() {
 		super();
 	}
-	  
+    
+	    
 }
