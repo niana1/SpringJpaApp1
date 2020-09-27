@@ -14,8 +14,7 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@Data
+
 @Entity
 @Table(name = "employee_sapient3")
 public class Employee {
