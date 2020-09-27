@@ -2,6 +2,9 @@ package com.sapient.repo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -96,7 +99,7 @@ public class EmployeeRepositoryIntegrationTest {
         .hasSize(3)
         .extracting(Employee::getName).containsOnly(alex.getName(), ron.getName(), bob.getName());
     }
-	@Test
+    @Test
 	public void givenSetOfEmployees_whenfindByJobAndSalary_thenReturnEmployee() throws ParseException {
 		Date date1 = new SimpleDateFormat("yyyy/MM/dd").parse("2020/01/01");
 		Employee alex = new Employee("alex", date1, "manager", 12000.0);
